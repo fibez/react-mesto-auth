@@ -10,6 +10,10 @@ import { ImagePopup } from './ImagePopup';
 import { PopupRemoveCard } from './PopupRemoveCard';
 import { api } from './utils/Api';
 import { CurrentUserContext } from '../context/CurrentUserContext';
+import { Route, Routes, Navigate } from 'react-router-dom';
+import { Login } from './Login';
+import { Register } from './Register';
+import { ProtectedRouteElement } from './ProtectedRoute';
 
 function App() {
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
@@ -18,6 +22,7 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
     Promise.all([api.getUserInfo(), api.getCards()])
@@ -124,16 +129,32 @@ function App() {
       <CurrentUserContext.Provider value={currentUser}>
         <div className="page">
           <Header />
-          <Main
-            onEditAvatar={handleAvatarClick}
-            onEditProfile={handleEditProfileCLick}
-            onAddPlace={handleAddCardClick}
-            onCardClick={handleCardClick}
-            onClose={closeAllPopups}
-            onCardLike={handleCardLike}
-            onCardDelete={handleCardDelete}
-            cards={cards}
-          />
+          <Routes>
+            <Route path="*" element={loggedIn ? <Navigate to="/" replace /> : <Navigate to="/sign-in" replace />} />
+            <Route
+              path="/"
+              element={
+                <ProtectedRouteElement
+                  element={Main}
+                  loggedIn={loggedIn}
+                  onEditAvatar={handleAvatarClick}
+                  onEditProfile={handleEditProfileCLick}
+                  onAddPlace={handleAddCardClick}
+                  onCardClick={handleCardClick}
+                  onClose={closeAllPopups}
+                  onCardLike={handleCardLike}
+                  onCardDelete={handleCardDelete}
+                  cards={cards}
+                />
+              }
+            />
+            <Route path="/sign-up" element={<Register />} />
+            <Route path="/sign-in" element={<Login />} />
+            {/* <Route
+              path="/sign-in"
+              element={loggedIn ? <Navigate to="/" replace /> : <Navigate to="/sign-in" replace />}
+            /> */}
+          </Routes>
           <Footer />
           <PopupProfileEdit isOpened={isEditProfileOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
           <PopupCardsAdd isOpened={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} />
