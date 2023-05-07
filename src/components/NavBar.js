@@ -1,25 +1,36 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, NavLink } from 'react-router-dom';
 
-function NavBar() {
-  const currentPath = window.location.pathname;
-
-  function getButton(currentPath) {
-    switch (currentPath) {
-      case '/home':
-        return <button className="header__navigation-button">Регистрация</button>;
-      case '/about':
-        return <button className="header__navigation-button">О нас</button>;
-      case '/contact':
-        return <button className="header__navigation-button">Контакты</button>;
-      default:
-        return <button className="header__navigation-button">Войти</button>;
-    }
-  }
-
+function NavBar(props) {
   return (
     <>
       <Routes>
-        <Route path="*" element={getButton(currentPath)} />
+        <Route
+          path="/"
+          element={
+            <div className="header__navigation-container">
+              <span className="header__email">{props.userEmail}</span>
+              <NavLink className="navlink navlink_header" to="/sign-in" onClick={props.onLogout}>
+                Выйти
+              </NavLink>
+            </div>
+          }
+        />
+        <Route
+          path="/sign-in"
+          element={
+            <NavLink className="navlink navlink_header" to="/sign-up">
+              Зарегистрироваться
+            </NavLink>
+          }
+        />
+        <Route
+          path="/sign-up"
+          element={
+            <NavLink className="navlink navlink_header" to="/sign-in">
+              Войти
+            </NavLink>
+          }
+        />
       </Routes>
     </>
   );

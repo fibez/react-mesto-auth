@@ -1,8 +1,11 @@
 import { PopupWithForm } from './PopupWithForm';
+import { Popup } from './Popup';
 
 function PopupRemoveCard({ isOpened, onClose }) {
   return (
-    <PopupWithForm popupType="remove-card" name="Вы уверены?" isOpened={isOpened} onClose={onClose} buttonText={'Да'} />
+    <Popup isOpened={isOpened} onClose={onClose}>
+      <PopupWithForm popupType="remove-card" name="Вы уверены?" buttonText={'Да'} />
+    </Popup>
   );
 }
 

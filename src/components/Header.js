@@ -1,12 +1,12 @@
 import logo from '../images/logo.svg';
 import { NavBar } from './NavBar';
 
-function Header() {
+function Header(props) {
   return (
     <>
       <header className="header page__header">
         <img className="header__logo" src={logo} alt="Логотип портала" />
-        <NavBar />
+        <NavBar userEmail={props.userEmail} onLogout={props.onLogout} />
       </header>
     </>
   );
