@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Header } from './Header';
 import { Main } from './Main';
 import { Footer } from './Footer';
-import { api } from './utils/Api';
+import { api } from '../utils/api';
 import { CurrentUserContext } from '../context/CurrentUserContext';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate, Navigate } from 'react-router-dom';
 import { Login } from './Login';
 import { Register } from './Register';
 import { ProtectedRouteElement } from './ProtectedRoute';
-import * as auth from './utils/auth';
+import * as auth from '../utils/auth';
 
 function App() {
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
@@ -17,23 +17,25 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
-  const [loggedIn, setLoggedIn] = useState('');
+  const [loggedIn, setLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState('');
   const [isInfoToooltipOpen, setInfoToolTipOpen] = useState(false);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    Promise.all([api.getUserInfo(), api.getCards()])
-      .then(([userInfo, initialCards]) => {
-        setCurrentUser(userInfo);
+    if (loggedIn) {
+      Promise.all([api.getUserInfo(), api.getCards()])
+        .then(([userInfo, initialCards]) => {
+          setCurrentUser(userInfo);
 
-        setCards(initialCards);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, []);
+          setCards(initialCards);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  }, [loggedIn]);
 
   useEffect(() => {
     if (localStorage.getItem('token')) {
@@ -147,61 +149,62 @@ function App() {
   }
 
   return (
-    <>
-      <CurrentUserContext.Provider value={currentUser}>
-        <div className="page">
-          <Header userEmail={userEmail} onLogout={handleLogout} />
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <ProtectedRouteElement
-                  element={Main}
-                  loggedIn={loggedIn}
-                  onEditAvatar={handleAvatarClick}
-                  onEditProfile={handleEditProfileCLick}
-                  onAddPlace={handleAddCardClick}
-                  onCardClick={handleCardClick}
-                  onClose={closeAllPopups}
-                  onCardLike={handleCardLike}
-                  onCardDelete={handleCardDelete}
-                  cards={cards}
-                  isEditProfileOpen={isEditProfileOpen}
-                  handleUpdateUser={handleUpdateUser}
-                  isAddPlacePopupOpen={isAddPlacePopupOpen}
-                  handleAddPlaceSubmit={handleAddPlaceSubmit}
-                  isEditAvatarPopupOpen={isEditAvatarPopupOpen}
-                  handleUpdateAvatar={handleUpdateAvatar}
-                  selectedCard={selectedCard}
-                />
-              }
-            />
-            <Route
-              path="/sign-up"
-              element={
-                <Register
-                  handleInfoTooltipOpen={handleInfoTooltipOpen}
-                  isInfoToooltipOpen={isInfoToooltipOpen}
-                  onClose={closeAllPopups}
-                />
-              }
-            />
-            <Route
-              path="/sign-in"
-              element={
-                <Login
-                  onLogin={setLoggedIn}
-                  handleInfoTooltipOpen={handleInfoTooltipOpen}
-                  isInfoToooltipOpen={isInfoToooltipOpen}
-                  onClose={closeAllPopups}
-                />
-              }
-            />
-          </Routes>
-          <Footer />
-        </div>
-      </CurrentUserContext.Provider>
-    </>
+    <CurrentUserContext.Provider value={currentUser}>
+      <div className="page">
+        <Header userEmail={userEmail} onLogout={handleLogout} />
+
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <ProtectedRouteElement
+                element={Main}
+                loggedIn={loggedIn}
+                onEditAvatar={handleAvatarClick}
+                onEditProfile={handleEditProfileCLick}
+                onAddPlace={handleAddCardClick}
+                onCardClick={handleCardClick}
+                onClose={closeAllPopups}
+                onCardLike={handleCardLike}
+                onCardDelete={handleCardDelete}
+                cards={cards}
+                isEditProfileOpen={isEditProfileOpen}
+                handleUpdateUser={handleUpdateUser}
+                isAddPlacePopupOpen={isAddPlacePopupOpen}
+                handleAddPlaceSubmit={handleAddPlaceSubmit}
+                isEditAvatarPopupOpen={isEditAvatarPopupOpen}
+                handleUpdateAvatar={handleUpdateAvatar}
+                selectedCard={selectedCard}
+              />
+            }
+          />
+          <Route path="*" element={loggedIn ? <Navigate to="/" replace /> : <Navigate to="/sign-in" replace />} />
+          <Route
+            path="/sign-up"
+            element={
+              <Register
+                handleInfoTooltipOpen={handleInfoTooltipOpen}
+                isInfoToooltipOpen={isInfoToooltipOpen}
+                onClose={closeAllPopups}
+              />
+            }
+          />
+          <Route
+            path="/sign-in"
+            element={
+              <Login
+                onLogin={setLoggedIn}
+                handleInfoTooltipOpen={handleInfoTooltipOpen}
+                isInfoToooltipOpen={isInfoToooltipOpen}
+                onClose={closeAllPopups}
+              />
+            }
+          />
+        </Routes>
+
+        <Footer />
+      </div>
+    </CurrentUserContext.Provider>
   );
 }
 

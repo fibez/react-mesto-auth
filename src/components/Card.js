@@ -20,7 +20,6 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
   }
 
   function handleLikeClick() {
-    // console.log(card.likes.length);
     onCardLike(card);
   }
 
@@ -29,26 +28,24 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
   }
 
   return (
-    <>
-      <div className="elements__card">
-        <img className="elements__image" src={card.link} alt={card.name} onClick={handleCardClick} />
-        <div className="elements__wrapper">
-          <h2 className="elements__place-name">{card.name}</h2>
-          <div className="elements__like-container">
-            <button
-              className={cardLikeButtonClassName}
-              onClick={handleLikeClick}
-              type="button"
-              aria-label="Понравилось"
-            ></button>
-            <span className="elements__like-counter">{showCounter()}</span>
-          </div>
+    <div className="elements__card">
+      <img className="elements__image" src={card.link} alt={card.name} onClick={handleCardClick} />
+      <div className="elements__wrapper">
+        <h2 className="elements__place-name">{card.name}</h2>
+        <div className="elements__like-container">
+          <button
+            className={cardLikeButtonClassName}
+            onClick={handleLikeClick}
+            type="button"
+            aria-label="Понравилось"
+          ></button>
+          <span className="elements__like-counter">{showCounter()}</span>
         </div>
-        {isOwn && (
-          <button className="elements__bucket" type="button" aria-label="Удалить" onClick={handleDeleteCard}></button>
-        )}
       </div>
-    </>
+      {isOwn && (
+        <button className="elements__bucket" type="button" aria-label="Удалить" onClick={handleDeleteCard}></button>
+      )}
+    </div>
   );
 }
 

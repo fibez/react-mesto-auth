@@ -1,7 +1,7 @@
 import { Registered } from './Registered';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import * as auth from './utils/auth.js';
+import * as auth from '../utils/auth.js';
 import { InfoTooltip } from './InfoTooltip';
 
 function Register(props) {
@@ -28,7 +28,7 @@ function Register(props) {
     const { password, email } = formValue;
     auth
       .register(password, email)
-      .then((res) => {
+      .then(() => {
         props.handleInfoTooltipOpen();
         setTimeout(() => {
           navigate('/sign-in', { replace: true });

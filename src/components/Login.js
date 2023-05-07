@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import * as auth from './utils/auth.js';
+import * as auth from '../utils/auth.js';
 import { InfoTooltip } from './InfoTooltip.js';
 
 function Login(props) {
@@ -24,7 +24,6 @@ function Login(props) {
   function handleSubmit(e) {
     e.preventDefault();
     if (!formValue.email || !formValue.password) {
-      console.log('empty');
       return;
     }
     auth
@@ -38,8 +37,7 @@ function Login(props) {
           return data;
         }
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         props.handleInfoTooltipOpen();
         setLoginError(true);
       });

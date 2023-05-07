@@ -9,8 +9,11 @@ function PopupProfileEdit({ isEditProfileOpened, onClose, onUpdateUser }) {
   const currentUser = useContext(CurrentUserContext);
 
   useEffect(() => {
-    isEditProfileOpened && setName(currentUser.name);
-    isEditProfileOpened && setDescription(currentUser.about);
+    if (isEditProfileOpened) {
+      setName(currentUser.name);
+      setDescription(currentUser.about);
+    }
+    return;
   }, [isEditProfileOpened, currentUser]);
 
   function handleSubmit(e) {

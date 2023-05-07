@@ -14,33 +14,8 @@ function PopupEditAvatar({ isEditAvatarPopupOpen, onClose, onUpdateAvatar }) {
   function handleSubmit(e) {
     e.preventDefault();
 
-    // console.log(avatarInputRef.current.value);
-
     onUpdateAvatar(avatarInputRef.current.value);
   }
-
-  // return (
-  //   <PopupWithForm
-  //     popupType="edit-avatar"
-  //     name="Обновить аватар"
-  //     isOpened={isEditAvatarPopupOpen}
-  //     onClose={onClose}
-  //     buttonText={'Сохранить'}
-  //     onSubmit={handleSubmit}
-  //   >
-  //     <input
-  //       className="popup__input popup__input_type_avatar-link"
-  //       id="avatar-link"
-  //       placeholder="Ссылка на аватар"
-  //       name="cards-input-avatar-link"
-  //       defaultValue=""
-  //       required=""
-  //       type="url"
-  //       ref={avatarInputRef}
-  //     />
-  //     <span className="popup__error popup__error_type_avatar-link" id="avatar-link-error" />
-  //   </PopupWithForm>
-  // );
 
   return (
     <Popup isOpened={isEditAvatarPopupOpen} onClose={onClose}>
